@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import Card from '../../components/Card'
 import { useInterview } from '../../context/InterviewContext'
+import { motion } from 'framer-motion'
 
 export default function RulesStep(){
   const { setStep } = useInterview()
@@ -9,7 +10,7 @@ export default function RulesStep(){
   return (
     <div className="max-w-3xl mx-auto">
       <Card>
-        <h3 className="text-xl font-semibold">Interview Rules</h3>
+        <motion.h3 initial={{y:6, opacity:0}} animate={{y:0, opacity:1}} className="text-xl font-semibold">Interview Rules</motion.h3>
         <p className="text-sm text-slate-600 mt-2">Please read the rules carefully before starting. These rules ensure your attempt is valid.</p>
 
         <ul className="mt-4 list-disc pl-5 space-y-2 text-sm text-slate-700">

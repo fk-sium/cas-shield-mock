@@ -3,7 +3,7 @@ import Webcam from 'react-webcam'
 import Card from '../../components/Card'
 import { useInterview } from '../../context/InterviewContext'
 import { motion } from 'framer-motion'
-import { Mic, Video, Maximize, Camera, Wifi } from 'lucide-react'
+import { Mic } from 'lucide-react'
 import FullscreenModal from './FullscreenModal'
 import BottomBar from './BottomBar'
 import LeftPanel from './LeftPanel'
@@ -13,6 +13,23 @@ import UploadAnimation from './UploadAnimation'
 
 const PREP_SECONDS = 20
 const RECORD_SECONDS = 120
+
+const pulse = {
+  initial: { opacity: 0.6, scale: 1 },
+  animate: { opacity: [0.6, 1, 0.6], scale: [1, 1.03, 1], transition: { duration: 1.2, repeat: Infinity } }
+}
+
+function MicWave({active}){
+  // simple animated bars
+  const bars = [0,1,2,3,4]
+  return (
+    <div className="flex items-end gap-1 h-6">
+      {bars.map((b,i)=> (
+        <motion.div key={i} className="w-1 bg-white rounded-sm" animate={{height: active? [6+Math.random()*18, 4+Math.random()*20, 6+Math.random()*18] : [6]}} transition={{duration: 0.4 + i*0.08, repeat: Infinity, repeatType:'reverse'}} />
+      ))}
+    </div>
+  )
+}
 
 export default function InterviewStep(){
   const { questions, current, setCurrent, setRecordings, recordings, setStartedAt, setCompletedAt, setStep } = useInterview()
@@ -105,7 +122,7 @@ export default function InterviewStep(){
       mediaRecorderRef.current = mr
       mr.ondataavailable = function(e){ if(e.data && e.data.size) chunksRef.current.push(e.data) }
       mr.onstop = handleRecordingStop
-      mr.start()
+      mr.start(250)
       setIsRecording(true)
       setRecSeconds(0)
     }catch(e){
@@ -201,7 +218,7 @@ export default function InterviewStep(){
   }
 
   const answered = recordings.length
-  const remaining = questions.length - answered
+  const remaining = Math.max(0, questions.length - answered)
   const estRemainingMs = remaining * RECORD_SECONDS * 1000
 
   return (
@@ -215,24 +232,31 @@ export default function InterviewStep(){
             </div>
             <div className="w-1/3">
               <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                <motion.div initial={{width:0}} animate={{width: `${Math.round(((current+ (isRecording? recSeconds/RECORD_SECONDS:0))/questions.length)*100)}%`}} className="h-2 bg-brand" />
+                <motion.div initial={{width:0}} animate={{width: `${Math.round(((current + (isRecording? recSeconds/RECORD_SECONDS:0))/questions.length)*100)}%`}} transition={{duration:0.6}} className="h-2 bg-brand" />
               </div>
             </div>
           </div>
 
           <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2">
-              <div className="rounded-xl overflow-hidden border relative bg-black">
+              <motion.div initial={{scale:0.98, opacity:0}} animate={{scale:1, opacity:1}} transition={{duration:0.45}} className="rounded-xl overflow-hidden border relative bg-black">
                 <Webcam audio={true} ref={webcamRef} mirrored className="w-full h-96 object-cover" />
-                <div className="absolute top-3 left-3 bg-black/40 px-2 py-1 rounded-full text-white text-xs flex items-center gap-2">
-                  <div className={`h-2 w-2 rounded-full ${isRecording? 'bg-red-500 animate-pulse':'bg-gray-400'}`}></div>
-                  <div>{isRecording? 'REC' : (isPreparing? 'Preparing' : (isUploading? 'Uploading':'Idle'))}</div>
+
+                <div className="absolute top-3 left-3 bg-black/40 px-3 py-1 rounded-full text-white text-xs flex items-center gap-3">
+                  <motion.div variants={pulse} initial="initial" animate={isRecording? 'animate' : 'initial'} className="h-2 w-2 rounded-full bg-red-500" />
+                  <div className="font-medium">{isRecording? 'REC' : (isPreparing? 'Preparation' : (isUploading? 'Uploading':'Idle'))}</div>
                 </div>
-                <div className="absolute bottom-3 left-3 text-white text-xs bg-black/40 px-2 py-1 rounded-md">{isRecording? `${String(Math.floor(recSeconds/60)).padStart(2,'0')}:${String(recSeconds%60).padStart(2,'0')}` : `${String(Math.floor(prepSeconds/60)).padStart(2,'0')}:${String(prepSeconds%60).padStart(2,'0')}`}</div>
-                <div className="absolute top-3 right-3 text-white text-xs bg-black/40 px-2 py-1 rounded-md flex items-center gap-2">
-                  <Mic size={14} /> <span className="text-xs">Mic</span>
+
+                <div className="absolute bottom-3 left-3 text-white text-xs bg-black/40 px-2 py-1 rounded-md">
+                  {isRecording? `${String(Math.floor(recSeconds/60)).padStart(2,'0')}:${String(recSeconds%60).padStart(2,'0')}` : `${String(Math.floor(prepSeconds/60)).padStart(2,'0')}:${String(prepSeconds%60).padStart(2,'0')}`}
                 </div>
-              </div>
+
+                <div className="absolute top-3 right-3 text-white text-xs bg-black/20 px-2 py-1 rounded-md flex items-center gap-3">
+                  <Mic size={14} />
+                  <MicWave active={isRecording} />
+                </div>
+
+              </motion.div>
 
               <div className="mt-4">
                 <QuestionCard question={questions[current]} />

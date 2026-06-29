@@ -11,7 +11,6 @@ export default function PermissionStep(){
   const [browserInfo] = useState(navigator.userAgent)
 
   useEffect(()=>{
-    // try to get camera and microphone preview if user grants
     async function startPreview(){
       try{
         const s = await navigator.mediaDevices.getUserMedia({video:{width:640}, audio:true})
@@ -19,7 +18,6 @@ export default function PermissionStep(){
         if(videoRef.current) videoRef.current.srcObject = s
         setPermissions(p => ({...p, camera:true, microphone:true}))
       }catch(e){
-        // try individually
         try{
           const cam = await navigator.mediaDevices.getUserMedia({video:{width:640}})
           setStream(cam)
@@ -37,7 +35,6 @@ export default function PermissionStep(){
       }
     }
 
-    // don't auto prompt; only when mounted show a soft prompt button
     startPreview()
 
     return ()=>{
@@ -54,19 +51,19 @@ export default function PermissionStep(){
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2">
         <Card>
-          <h3 className="text-xl font-semibold">Camera & Microphone Permissions</h3>
+          <motion.h3 initial={{y:6, opacity:0}} animate={{y:0, opacity:1}} className="text-xl font-semibold">Camera & Microphone Permissions</motion.h3>
           <p className="text-sm text-slate-600 mt-2">Allow access to your camera and microphone. This preview shows what your recording will look like.</p>
 
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <div className="rounded-xl overflow-hidden border">
+              <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.08}} className="rounded-xl overflow-hidden border">
                 <video ref={videoRef} autoPlay playsInline muted className="w-full h-80 object-cover bg-black" />
-              </div>
+              </motion.div>
               <div className="mt-2 text-sm text-slate-600">Webcam preview</div>
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <motion.div initial={{x:8, opacity:0}} animate={{x:0, opacity:1}} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-md bg-blue-50 text-brand"><Camera size={18} /></div>
                   <div>
@@ -77,9 +74,9 @@ export default function PermissionStep(){
                 <div>
                   {permissions.camera ? <CheckCircle className="text-green-500"/> : <XCircle className="text-red-400"/>}
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="flex items-center justify-between">
+              <motion.div initial={{x:8, opacity:0}} animate={{x:0, opacity:1}} transition={{delay:0.06}} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-md bg-blue-50 text-brand"><Mic size={18} /></div>
                   <div>
@@ -90,9 +87,9 @@ export default function PermissionStep(){
                 <div>
                   {permissions.microphone ? <CheckCircle className="text-green-500"/> : <XCircle className="text-red-400"/>}
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="flex items-center justify-between">
+              <motion.div initial={{x:8, opacity:0}} animate={{x:0, opacity:1}} transition={{delay:0.12}} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-md bg-blue-50 text-brand"><Globe size={18} /></div>
                   <div>
@@ -103,9 +100,9 @@ export default function PermissionStep(){
                 <div>
                   {navigator.onLine ? <CheckCircle className="text-green-500"/> : <XCircle className="text-red-400"/>}
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="flex items-center justify-between">
+              <motion.div initial={{x:8, opacity:0}} animate={{x:0, opacity:1}} transition={{delay:0.14}} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-md bg-blue-50 text-brand"><Monitor size={18} /></div>
                   <div>
@@ -116,7 +113,7 @@ export default function PermissionStep(){
                 <div>
                   <CheckCircle className="text-green-500"/>
                 </div>
-              </div>
+              </motion.div>
 
               <div className="mt-4">
                 <button disabled={!canContinue} onClick={()=> setStep('system')} className={`w-full inline-flex items-center justify-center px-4 py-2 rounded-md text-white ${canContinue? 'bg-brand hover:opacity-95':'bg-slate-300 cursor-not-allowed'}`}>

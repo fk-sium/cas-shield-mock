@@ -1,8 +1,9 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 
 export default function RightPanel(){
   return (
-    <div className="p-4 bg-white rounded-xl border">
+    <motion.div initial={{x:8, opacity:0}} animate={{x:0, opacity:1}} transition={{duration:0.45}} className="p-4 bg-white rounded-xl border">
       <h4 className="font-semibold">Interview Tips</h4>
       <ul className="mt-3 text-sm text-slate-600 space-y-2">
         <li>Maintain eye contact with the camera.</li>
@@ -11,6 +12,6 @@ export default function RightPanel(){
         <li>Smile occasionally to appear engaged.</li>
         <li>Answer confidently and concisely.</li>
       </ul>
-    </div>
+    </motion.div>
   )
 }

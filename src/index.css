@@ -2,15 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
+:root {
   --brand: #2563EB;
+  --brand-dark: #1e40af;
+  --brand-light: #dbeafe;
 }
 
-body{
+body {
   @apply bg-white text-slate-800 antialiased;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
 }
 
-/* simple card shadow */
-.card-shadow{
-  box-shadow: 0 6px 18px rgba(16,24,40,0.06), 0 2px 6px rgba(2,6,23,0.04);
+/* Premium card shadow */
+.card-shadow {
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06), 0 2px 6px rgba(2, 6, 23, 0.04);
+}
+
+.card-shadow-lg {
+  box-shadow: 0 20px 40px rgba(16, 24, 40, 0.08), 0 8px 16px rgba(2, 6, 23, 0.06);
+}
+
+.card-shadow-hover {
+  transition: box-shadow 0.3s ease;
+}
+
+.card-shadow-hover:hover {
+  box-shadow: 0 20px 40px rgba(16, 24, 40, 0.12), 0 8px 16px rgba(2, 6, 23, 0.08);
+}
+
+/* Animated gradient blob */
+.blob {
+  position: absolute;
+  mix-blend-mode: multiply;
+  filter: blur(40px);
+  opacity: 0.7;
+  animation: blobMove 8s infinite ease-in-out;
+}
+
+@keyframes blobMove {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(30px, -30px); }
+  66% { transform: translate(-30px, 30px); }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove default focus outline and add custom one */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
 }

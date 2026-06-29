@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --brand: #2563EB;
+}
+
+body{
+  @apply bg-white text-slate-800 antialiased;
+}
+
+/* simple card shadow */
+.card-shadow{
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06), 0 2px 6px rgba(2,6,23,0.04);
+}
